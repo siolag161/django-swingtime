@@ -112,9 +112,10 @@ class Event(models.Model):
         if count == until == None:
             self.occurrence_set.create(start_time=start_time, end_time=end_time)
         else:
+	    if count != None and count <= 0: raise ValueError("count %s must be a positive number" %(count))
             rrule_params.setdefault('freq', rrule.DAILY)
             delta = end_time - start_time
-            for ev in rrule.rrule(dtstart=start_time, **rrule_params):
+            for ev in rrule.rrule(dtstart=start_time, **rrule_params):		
                 self.occurrence_set.create(start_time=ev, end_time=ev + delta)
 
     #---------------------------------------------------------------------------
